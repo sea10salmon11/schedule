@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ScheduleApp" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#5A67D8</item>
+        <item name="colorPrimaryDark">#4C51BF</item>
+        <item name="colorAccent">#667EEA</item>
+    </style>
+</resources>
