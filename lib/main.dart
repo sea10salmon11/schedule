@@ -17,7 +17,9 @@ class ScheduleApp extends StatelessWidget {
       title: 'Расписание уроков',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6C63FF),
+        ),
         useMaterial3: true,
       ),
       home: const HomeScreen(),

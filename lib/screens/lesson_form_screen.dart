@@ -51,7 +51,13 @@ class _LessonFormScreenState extends State<LessonFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.lesson == null ? 'Новый урок' : 'Изменить урок'),
+        backgroundColor: const Color(0xFF6C63FF),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          widget.lesson == null ? 'Новый урок' : 'Изменить урок',
+          style: const TextStyle(fontWeight: FontWeight.w700),
+        ),
       ),
       body: Form(
         key: _formKey,

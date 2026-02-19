@@ -61,12 +61,10 @@ class _HomeScreenState extends State<HomeScreen>
 
       for (final lesson in dayLessons) {
         if (d == 0) {
-          // Today: only include lessons that haven't started yet
           final startMin = lesson.startHour * 60 + lesson.startMinute;
           final nowMin = now.hour * 60 + now.minute;
           if (startMin > nowMin) return lesson;
         } else {
-          // Future day: first lesson of that day
           return lesson;
         }
       }
@@ -124,11 +122,24 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF2F2F7),
       appBar: AppBar(
-        title: const Text('Расписание'),
+        backgroundColor: const Color(0xFF6C63FF),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Расписание',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: _dayNames.map((d) => Tab(text: d)).toList(),
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white54,
+          indicatorColor: Colors.white,
+          indicatorWeight: 3,
+          indicatorSize: TabBarIndicatorSize.label,
+          dividerColor: Colors.transparent,
         ),
       ),
       body: _loading
@@ -145,20 +156,46 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.event_available,
-                            size: 64,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .outlineVariant),
-                        const SizedBox(height: 12),
-                        const Text('Уроков нет'),
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.07),
+                                blurRadius: 20,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.calendar_today_rounded,
+                            size: 48,
+                            color: Color(0xFF6C63FF),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          'Нет уроков',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1A1A2E),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Нажмите + чтобы добавить',
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
                       ],
                     ),
                   );
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 80),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
                   itemCount: dayLessons.length,
                   itemBuilder: (context, index) {
                     final lesson = dayLessons[index];
@@ -175,6 +212,8 @@ class _HomeScreenState extends State<HomeScreen>
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addLesson,
+        backgroundColor: const Color(0xFF6C63FF),
+        foregroundColor: Colors.white,
         tooltip: 'Добавить урок',
         child: const Icon(Icons.add),
       ),
@@ -188,6 +227,17 @@ class _LessonCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDismissed;
 
+  static const _palette = [
+    Color(0xFF6C63FF), // violet
+    Color(0xFF10B981), // emerald
+    Color(0xFFF59E0B), // amber
+    Color(0xFFEF4444), // coral
+    Color(0xFF8B5CF6), // purple
+    Color(0xFF06B6D4), // cyan
+    Color(0xFFEC4899), // pink
+    Color(0xFF059669), // green
+  ];
+
   const _LessonCard({
     required this.lesson,
     required this.isNext,
@@ -195,67 +245,154 @@ class _LessonCard extends StatelessWidget {
     required this.onDismissed,
   });
 
+  Color get _color => _palette[lesson.subject.hashCode.abs() % _palette.length];
+
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final color = _color;
+
     return Dismissible(
       key: Key(lesson.id),
       direction: DismissDirection.endToStart,
       background: Container(
+        margin: const EdgeInsets.only(bottom: 10),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: colorScheme.error,
-          borderRadius: BorderRadius.circular(12),
+          color: const Color(0xFFEF4444),
+          borderRadius: BorderRadius.circular(16),
         ),
-        child: Icon(Icons.delete_outline, color: colorScheme.onError),
+        child: const Icon(Icons.delete_outline, color: Colors.white),
       ),
       onDismissed: (_) => onDismissed(),
-      child: Card(
-        color: isNext ? colorScheme.primaryContainer : null,
-        child: ListTile(
-          onTap: onTap,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          leading: CircleAvatar(
-            backgroundColor:
-                isNext ? colorScheme.primary : colorScheme.surfaceContainerHighest,
-            foregroundColor:
-                isNext ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
-            child: Text(
-              lesson.startTimeStr.substring(0, 2),
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-            ),
-          ),
-          title: Text(
-            lesson.subject,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          subtitle: Text(
-            _buildSubtitle(),
-            style: TextStyle(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
               color: isNext
-                  ? colorScheme.onPrimaryContainer
-                  : colorScheme.onSurfaceVariant,
+                  ? color.withOpacity(0.22)
+                  : Colors.black.withOpacity(0.06),
+              blurRadius: isNext ? 18 : 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          border: isNext
+              ? Border.all(color: color.withOpacity(0.40), width: 1.5)
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(16),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Colored left accent strip
+                  Container(
+                    width: 5,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  // Main content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  lesson.subject,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF1A1A2E),
+                                  ),
+                                ),
+                              ),
+                              if (isNext)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 9,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    'Следующий',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      letterSpacing: 0.2,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time_rounded,
+                                size: 13,
+                                color: color,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${lesson.startTimeStr} — ${lesson.endTimeStr}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: color,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (lesson.room.isNotEmpty ||
+                                  lesson.teacher.isNotEmpty)
+                                Expanded(
+                                  child: Text(
+                                    '  ·  ${_details()}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                ],
+              ),
             ),
           ),
-          trailing: isNext
-              ? Chip(
-                  label: const Text('Следующий',
-                      style: TextStyle(fontSize: 11)),
-                  backgroundColor: colorScheme.primary,
-                  labelStyle: TextStyle(color: colorScheme.onPrimary),
-                  padding: EdgeInsets.zero,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                )
-              : null,
         ),
       ),
     );
   }
 
-  String _buildSubtitle() {
-    final parts = ['${lesson.startTimeStr} — ${lesson.endTimeStr}'];
+  String _details() {
+    final parts = <String>[];
     if (lesson.room.isNotEmpty) parts.add('каб. ${lesson.room}');
     if (lesson.teacher.isNotEmpty) parts.add(lesson.teacher);
     return parts.join(' · ');
