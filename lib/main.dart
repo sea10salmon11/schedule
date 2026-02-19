@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
+import 'services/notification_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.init();
+  runApp(const ScheduleApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ScheduleApp extends StatelessWidget {
+  const ScheduleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Hello, World!!!',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-        ),
+    return MaterialApp(
+      title: 'Расписание',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        useMaterial3: true,
       ),
+      home: const HomeScreen(),
     );
   }
 }
