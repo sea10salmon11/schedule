@@ -35,7 +35,7 @@ class NotificationService {
       channelDescription: 'Ближайший предстоящий урок на экране блокировки',
       importance: Importance.low,
       priority: Priority.low,
-      ongoing: true,
+      autoCancel: false,
       showWhen: false,
       // Show full content on lock screen
       visibility: NotificationVisibility.public,

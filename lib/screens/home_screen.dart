@@ -267,6 +267,7 @@ class _LessonCard extends StatelessWidget {
       onDismissed: (_) => onDismissed(),
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -296,13 +297,7 @@ class _LessonCard extends StatelessWidget {
                   // Colored left accent strip
                   Container(
                     width: 5,
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        bottomLeft: Radius.circular(16),
-                      ),
-                    ),
+                    color: color,
                   ),
                   const SizedBox(width: 14),
                   // Main content
