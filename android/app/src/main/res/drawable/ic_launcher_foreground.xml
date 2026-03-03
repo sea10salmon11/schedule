@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- White paper body with rounded corners -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,27 H68 Q75,27 75,34 V75 Q75,81 68,81 H40 Q33,81 33,75 V34 Q33,27 40,27 Z" />
+
+    <!-- Purple header strip (same rounded corners at top) -->
+    <path
+        android:fillColor="#6C63FF"
+        android:pathData="M40,27 H68 Q75,27 75,34 V41 H33 V34 Q33,27 40,27 Z" />
+
+    <!-- Small white title line in header -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M41,32 H67 V35 H41 Z"
+        android:fillAlpha="0.55" />
+
+    <!-- Schedule row 1 -->
+    <path
+        android:fillColor="#A89FFF"
+        android:pathData="M40,49 H68 V52 H40 Z" />
+
+    <!-- Schedule row 2 -->
+    <path
+        android:fillColor="#A89FFF"
+        android:pathData="M40,58 H68 V61 H40 Z" />
+
+    <!-- Schedule row 3 (slightly shorter for visual rhythm) -->
+    <path
+        android:fillColor="#A89FFF"
+        android:pathData="M40,67 H60 V70 H40 Z" />
+</vector>
